@@ -3,15 +3,16 @@ package com.example.emergency_response.controllers;
 import com.example.emergency_response.models.Emergency;
 import com.example.emergency_response.services.EmergencyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/emergencies")  // Base API path
+@RequestMapping("/api/emergencies")
 public class EmergencyController {
-    
+
     @Autowired
     private EmergencyService emergencyService;
 
@@ -21,21 +22,35 @@ public class EmergencyController {
         return emergencyService.getAllEmergencies();
     }
 
-    // Get an emergency by ID
+    // Get emergency by ID
     @GetMapping("/{id}")
-    public Optional<Emergency> getEmergencyById(@PathVariable Long id) {
-        return emergencyService.getEmergencyById(id);
+    public ResponseEntity<Emergency> getEmergencyById(@PathVariable Long id) {
+        Optional<Emergency> emergency = emergencyService.getEmergencyById(id);
+        return emergency.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Create a new emergency
+    // Add a new emergency
     @PostMapping
-    public Emergency createEmergency(@RequestBody Emergency emergency) {
-        return emergencyService.saveEmergency(emergency);
+    public ResponseEntity<Emergency> addEmergency(@RequestBody Emergency emergency) {
+        Emergency savedEmergency = emergencyService.addEmergency(emergency);
+        return ResponseEntity.ok(savedEmergency);
     }
 
-    // Delete an emergency by ID
+    // Update an emergency
+    @PutMapping("/{id}")
+    public ResponseEntity<Emergency> updateEmergency(@PathVariable Long id, @RequestBody Emergency updatedEmergency) {
+        try {
+            Emergency emergency = emergencyService.updateEmergency(id, updatedEmergency);
+            return ResponseEntity.ok(emergency);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Delete an emergency
     @DeleteMapping("/{id}")
-    public void deleteEmergency(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmergency(@PathVariable Long id) {
         emergencyService.deleteEmergency(id);
+        return ResponseEntity.noContent().build();
     }
 }

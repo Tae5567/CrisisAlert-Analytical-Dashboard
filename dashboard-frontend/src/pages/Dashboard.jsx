@@ -85,6 +85,7 @@ const Dashboard = () => {
             <div className="sidebar">
                 <h2>Emergency Dashboard</h2>
                 <a href="#" className="active">Reports</a>
+                <a href="/prediction">Predictions</a> {/* New Link */}
                 <a href="#">Library</a>
                 <a href="#">People</a>
                 <a href="#">Settings</a>

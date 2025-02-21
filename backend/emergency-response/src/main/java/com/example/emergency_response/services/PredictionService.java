@@ -11,7 +11,7 @@ public class PredictionService {
     private final RestTemplate restTemplate;
 
     @Value("${fastapi.url}")
-    private String fastApiUrl; // Set this in application.properties
+    private String fastApiUrl;
 
     public PredictionService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

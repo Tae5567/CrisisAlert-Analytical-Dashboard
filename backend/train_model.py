@@ -18,7 +18,7 @@ columns_to_keep = [
 ]
 df = df[columns_to_keep]
 
-# Handle missing values (fill NaN with 0 for numerical columns)
+# Handle any missing values
 df.fillna(0, inplace=True)
 
 # Encode categorical variables
@@ -39,11 +39,11 @@ Y = df[[
 scaler_X = StandardScaler()
 X_scaled = scaler_X.fit_transform(X)
 
-# Use MinMaxScaler for year columns (2025-2040 range)
+# Use MinMaxScaler for years (range: 2025-2040)
 year_scaler = MinMaxScaler(feature_range=(2025, 2040))
 Y[["start_year", "end_year"]] = year_scaler.fit_transform(Y[["start_year", "end_year"]])
 
-# Scale the remaining outputs (Y) with StandardScaler
+# Scale the rest of the outputs (Y) with StandardScaler
 scaler_Y = StandardScaler()
 Y_scaled = scaler_Y.fit_transform(Y)
 
@@ -53,13 +53,13 @@ joblib.dump(year_scaler, "year_scaler.pkl")
 joblib.dump(scaler_Y, "scaler_Y.pkl")
 joblib.dump(label_encoders, "label_encoders.pkl")
 
-# Improved model with ReLU activation for non-negative outputs
+# ReLU activation for non-negative outputs
 model = keras.Sequential([
     keras.Input(shape=(X_scaled.shape[1],)),
     keras.layers.Dense(256, activation="relu"),
     keras.layers.Dense(128, activation="relu"),
     keras.layers.Dense(64, activation="relu"),
-    keras.layers.Dense(8, activation="relu")  # 8 outputs now
+    keras.layers.Dense(8, activation="relu")  
 ])
 
 # Compile the model

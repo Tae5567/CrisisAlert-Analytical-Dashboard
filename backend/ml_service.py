@@ -9,10 +9,9 @@ import logging
 # Initialize FastAPI app
 app = FastAPI()
 
-# Enable CORS (allowing requests from your React frontend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Adjust if frontend runs on a different URL
+    allow_origins=["http://localhost:3000"], 
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -28,10 +27,10 @@ year_scaler = joblib.load("year_scaler.pkl")
 scaler_Y = joblib.load("scaler_Y.pkl")
 label_encoders = joblib.load("label_encoders.pkl")
 
-# Ensure years stay within the valid range (2025-2040)
+# Ensure years stay within range of 2025-2040
 YEAR_MIN, YEAR_MAX = 2025, 2040
 
-# Input schema
+# User input schema into prediction model
 class PredictionInput(BaseModel):
     disaster_type: str
     sub_region: str
